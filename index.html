@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De Stress — สุขภาพจิตดี เริ่มต้นที่ตัวคุณ</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#152238">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#152238; --teal:#4FBDBA; --lavender:#9C8FE0; --amber:#F5A623;
+    --cream:#F7F5F0; --ink:#1B2A4A; --ink-soft:#5B6B85; --line: rgba(27,42,74,0.08);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Inter','Noto Sans Thai',sans-serif;
+    background: linear-gradient(160deg,#0f1b30 0%, #1d2f4d 55%, #2b3a5c 100%);
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding: 20px 10px; color: var(--ink);
+  }
+  .display{font-family:'Fraunces','Noto Sans Thai',serif;}
+  .phone{
+    position:relative; width:390px; height:820px; max-width:100%;
+    background: var(--cream); border-radius: 44px; border: 10px solid #0d1626;
+    box-shadow: 0 40px 90px rgba(0,0,0,0.45);
+    overflow:hidden; display:flex; flex-direction:column;
+  }
+  .screens{ flex:1; position:relative; overflow:hidden; }
+  .screen{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    opacity:0; pointer-events:none; transform: translateX(16px);
+    transition: opacity .3s ease, transform .3s ease; overflow-y:auto;
+  }
+  .screen.active{ opacity:1; pointer-events:auto; transform:translateX(0); }
+  .screen::-webkit-scrollbar{ display:none; }
+
+  .tabbar{
+    display:flex; justify-content:space-around; align-items:center;
+    padding: 10px 6px 16px; background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(10px); border-top: 1px solid var(--line);
+  }
+  .tab{
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    background:none; border:none; cursor:pointer; color:#9AA6BD;
+    font-size:10.5px; font-weight:600; padding:4px 10px; border-radius:14px;
+  }
+  .tab svg{ width:22px; height:22px; stroke:#B7C0D1; }
+  .tab.active{ color: var(--ink); }
+  .tab.active svg{ stroke: var(--teal); }
+
+  .top-wrap{ padding: 44px 24px 8px; }
+  .eyebrow{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color: var(--teal); font-weight:700; margin:0 0 6px; }
+  h1.page-title{ font-family:'Fraunces'; font-weight:600; font-size:24px; margin:0; color:var(--ink); line-height:1.25; }
+  .sub{ color:var(--ink-soft); font-size:13px; margin:6px 0 0; line-height:1.55; }
+
+  /* LOGIN */
+  #login{ background: radial-gradient(120% 80% at 50% 0%, #24406b 0%, #152238 60%, #0f1b30 100%); justify-content:center; align-items:center; text-align:center; color:#fff; padding: 0 32px; }
+  .logo-mark{ width:72px; height:72px; border-radius:20px; margin: 0 auto 18px; background: linear-gradient(135deg, var(--teal), var(--lavender)); display:flex; align-items:center; justify-content:center; box-shadow: 0 14px 34px rgba(79,189,186,0.35); }
+  .logo-mark svg{ width:34px; height:34px; }
+  #login .display{ font-size:28px; font-weight:600; margin:0 0 6px; }
+  #login .tag{ color:#B9C4DA; font-size:13px; margin:0 0 26px; line-height:1.6; }
+  .field{ text-align:left; margin-bottom:11px; }
+  .field label{ font-size:11px; color:#9AAAC7; font-weight:600; display:block; margin-bottom:6px; }
+  .field input{ width:100%; padding:12px 14px; border-radius:14px; border:1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.06); color:#fff; font-size:14px; outline:none; font-family:'Inter'; }
+  .field input:focus{ border-color: var(--teal); background: rgba(255,255,255,0.1); }
+  .btn-primary{ width:100%; padding:14px; border-radius:16px; border:none; cursor:pointer; background: linear-gradient(135deg, var(--teal), #3fa6a3); color:#0d1626; font-weight:700; font-size:14px; margin-top:8px; }
+  .btn-primary:disabled{ opacity:.5; }
+  .btn-ghost{ width:100%; padding:12px; border-radius:16px; border:1px solid rgba(255,255,255,0.2); background:transparent; color:#fff; font-weight:600; font-size:13px; margin-top:8px; cursor:pointer; }
+  .login-alt{ color:#8794AF; font-size:12px; margin-top:14px; }
+  .login-alt b{ color:var(--teal); cursor:pointer; }
+  .err{ color:#ff8080; font-size:11.5px; margin-top:8px; min-height:14px; }
+
+  /* HOME */
+  .greet{ display:flex; justify-content:space-between; align-items:flex-start; }
+  .avatar{ width:40px;height:40px;border-radius:50%; background: linear-gradient(135deg,var(--lavender),var(--teal)); display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px; }
+  .mood-row{ display:flex; gap:10px; padding: 16px 24px 4px; }
+  .mood-chip{ flex:1; aspect-ratio:1; border-radius:16px; border:1.5px solid var(--line); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; background:#fff; cursor:pointer; font-size:20px; transition: all .15s ease; }
+  .mood-chip span.lbl{ font-size:9px; color:var(--ink-soft); font-weight:600; }
+  .mood-chip.selected{ background: linear-gradient(160deg,#EAFBFA,#F1EEFC); border-color:var(--teal); transform:translateY(-2px); }
+  .save-mood-hint{ text-align:center; font-size:11px; color:var(--teal); font-weight:700; padding: 6px 0 0; min-height:16px; }
+
+  .mood-history{ margin: 14px 24px; padding:16px; border-radius:18px; background:#fff; border:1px solid var(--line); }
+  .mood-history h4{ font-family:'Fraunces'; font-size:14px; margin:0 0 10px; }
+  .mh-row{ display:flex; align-items:center; gap:10px; }
+  .mh-bar-wrap{ display:flex; align-items:flex-end; gap:6px; height:60px; flex:1; }
+  .mh-bar{ flex:1; border-radius:6px 6px 2px 2px; background: linear-gradient(180deg,var(--teal),#3fa6a3); min-height:6px; }
+  .mh-empty{ font-size:12px; color:var(--ink-soft); text-align:center; padding:10px 0; }
+
+  .section-h{ display:flex; justify-content:space-between; align-items:baseline; padding: 18px 24px 8px; }
+  .section-h h4{ font-family:'Fraunces'; font-size:15px; font-weight:600; margin:0; }
+  .tool-scroll{ display:flex; gap:10px; padding: 0 24px 24px; overflow-x:auto; }
+  .tool-card{ min-width:126px; border-radius:16px; padding:14px 12px; color:#fff; flex-shrink:0; cursor:pointer; }
+  .tool-card h5{ font-family:'Fraunces'; font-size:13px; margin:8px 0 3px; font-weight:600;}
+  .tool-card p{ font-size:10px; margin:0; opacity:.85; line-height:1.4; }
+  .tc1{ background: linear-gradient(160deg,#F5A623,#e08a1f); }
+  .tc2{ background: linear-gradient(160deg,#9C8FE0,#7d6fd6); }
+  .tc3{ background: linear-gradient(160deg,#4FBDBA,#37918f); }
+
+  /* JOURNAL */
+  .journal-entry{ margin: 0 24px 12px; padding:14px; border-radius:16px; background:#fff; border:1px solid var(--line); position:relative; }
+  .je-top{ display:flex; justify-content:space-between; font-size:11px; color:var(--ink-soft); margin-bottom:6px;}
+  .journal-entry p{ font-size:12.5px; line-height:1.6; margin:0; color:var(--ink); white-space:pre-wrap; }
+  .je-del{ position:absolute; top:10px; right:12px; background:none; border:none; color:#C7D0DE; font-size:16px; cursor:pointer; }
+  .empty-state{ text-align:center; padding: 50px 30px; color:var(--ink-soft); font-size:13px; }
+  .fab{ position:absolute; right:20px; bottom:90px; width:52px;height:52px; border-radius:50%; background: linear-gradient(135deg,var(--teal),var(--lavender)); border:none; color:#fff; font-size:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow: 0 14px 28px rgba(79,189,186,0.4); z-index:20; }
+  .compose{ position:absolute; inset:0; background:var(--cream); z-index:60; display:flex; flex-direction:column; transform: translateY(100%); transition: transform .3s ease; }
+  .compose.open{ transform: translateY(0); }
+  .compose-top{ display:flex; justify-content:space-between; align-items:center; padding: 44px 20px 12px; }
+  .compose-top button{ background:none; border:none; font-size:13px; font-weight:700; color:var(--ink-soft); cursor:pointer;}
+  .compose-top button.save{ color:var(--teal); }
+  .compose textarea{ flex:1; margin:0 20px 20px; border:none; resize:none; outline:none; background:transparent; font-family:'Inter'; font-size:14.5px; line-height:1.7; color:var(--ink); }
+  .mood-select-row{ display:flex; gap:8px; padding: 0 20px 14px; }
+  .mood-select-row .m{ font-size:19px; padding:7px 9px; border-radius:12px; border:1.5px solid var(--line); cursor:pointer; }
+  .mood-select-row .m.on{ border-color:var(--teal); background:#EAFBFA; }
+
+  /* COMMUNITY */
+  .post{ margin:0 24px 12px; padding:14px; border-radius:16px; background:#fff; border:1px solid var(--line); }
+  .post-top{ display:flex; align-items:center; gap:9px; margin-bottom:8px;}
+  .post-avatar{ width:30px;height:30px;border-radius:50%; background:linear-gradient(135deg,var(--amber),#e08a1f); flex-shrink:0;}
+  .post-name{ font-size:12px; font-weight:700; color:var(--ink); }
+  .post-time{ font-size:10px; color:var(--ink-soft); }
+  .post p{ font-size:12.5px; line-height:1.6; color:var(--ink-soft); margin:0 0 8px; white-space:pre-wrap;}
+  .post-actions{ display:flex; gap:14px; font-size:11px; color:var(--ink-soft); font-weight:600; }
+  .post-actions span{ cursor:pointer; }
+  .post-actions span.liked{ color:var(--teal); }
+  .new-post-box{ margin: 0 24px 16px; padding:12px; border-radius:16px; background:#fff; border:1px solid var(--line); }
+  .new-post-box textarea{ width:100%; border:none; resize:none; outline:none; font-family:'Inter'; font-size:12.5px; height:50px; }
+  .new-post-box button{ float:right; background: var(--teal); color:#fff; border:none; padding:7px 16px; border-radius:12px; font-size:11.5px; font-weight:700; cursor:pointer; }
+  .privacy-note{ font-size:10px; color:var(--ink-soft); padding: 0 24px 12px; line-height:1.5; }
+
+  /* CHAT */
+  .chat-bubble{ max-width:78%; padding:11px 14px; border-radius:16px; font-size:12.5px; line-height:1.55; margin: 0 24px 10px; white-space:pre-wrap; }
+  .chat-bubble.bot{ background:#fff; border:1px solid var(--line); border-bottom-left-radius:4px; }
+  .chat-bubble.me{ background: linear-gradient(135deg,var(--teal),#3fa6a3); color:#fff; border-bottom-right-radius:4px; margin-left:auto; margin-right:24px; }
+  .chat-row{ display:flex; }
+  .chat-input-bar{ display:flex; gap:10px; padding: 12px 18px 18px; border-top:1px solid var(--line); background:#fff; }
+  .chat-input-bar input{ flex:1; border:1px solid var(--line); border-radius:20px; padding:11px 15px; font-size:12.5px; outline:none; font-family:'Inter'; }
+  .chat-input-bar input:focus{ border-color: var(--teal); }
+  .send-btn{ width:38px;height:38px;border-radius:50%; border:none; background:var(--teal); color:#fff; display:flex;align-items:center;justify-content:center; cursor:pointer; flex-shrink:0; }
+  .send-btn:disabled{ opacity:.4; }
+  .typing{ display:flex; gap:4px; padding: 4px 2px; }
+  .typing span{ width:6px;height:6px;border-radius:50%; background:#B7C0D1; animation: blink 1.2s infinite; }
+  .typing span:nth-child(2){ animation-delay:.2s; }
+  .typing span:nth-child(3){ animation-delay:.4s; }
+  @keyframes blink{ 0%,80%,100%{opacity:.3} 40%{opacity:1} }
+  .crisis-note{ margin: 0 24px 12px; padding:12px 14px; border-radius:14px; background:#FFF3EC; border:1px solid #F5D0B5; font-size:11px; color:#8a5a2a; line-height:1.6; }
+
+  .loading-dot{ display:inline-block; width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="screens">
+
+    <!-- LOGIN -->
+    <section class="screen active" id="login">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3c2 3 3 5 3 7a3 3 0 1 1-6 0c0-2 1-4 3-7Z"></path>
+          <path d="M4 17c2-1.5 4-1.5 8 0s6 1.5 8 0"></path>
+          <path d="M4 20c2-1.5 4-1.5 8 0s6 1.5 8 0"></path>
+        </svg>
+      </div>
+      <h2 class="display">De Stress</h2>
+      <p class="tag">สุขภาพจิตดี เริ่มต้นที่ตัวคุณ<br>ข้อมูลของคุณบันทึกจริงบนเครื่องนี้</p>
+      <div style="width:100%;" id="loginFields">
+        <div class="field"><label>ชื่อที่ใช้แสดง</label><input type="text" id="nameInput" placeholder="เช่น นก, ต้นข้าว"></div>
+        <button class="btn-primary" id="loginBtn" onclick="handleLogin()">เริ่มใช้งาน</button>
+      </div>
+      <p class="err" id="loginErr"></p>
+      <p class="login-alt">ข้อมูลไดอารี่/อารมณ์เก็บเฉพาะบนอุปกรณ์นี้<br>โพสต์ในชุมชนจะมองเห็นได้จากทุกคนที่เปิดแอปนี้</p>
+    </section>
+
+    <!-- HOME -->
+    <section class="screen" id="home">
+      <div class="top-wrap" style="padding-bottom:0;">
+        <div class="greet">
+          <div>
+            <p class="eyebrow" id="greetTime">สวัสดี</p>
+            <h1 class="page-title" id="greetName">คุณเป็นอย่างไรบ้าง?</h1>
+          </div>
+          <div class="avatar" id="avatarLetter">?</div>
+        </div>
+      </div>
+      <div class="mood-row">
+        <div class="mood-chip" data-mood="4" onclick="logMood(this)">😄<span class="lbl">สดใส</span></div>
+        <div class="mood-chip" data-mood="3" onclick="logMood(this)">🙂<span class="lbl">โอเค</span></div>
+        <div class="mood-chip" data-mood="2" onclick="logMood(this)">😔<span class="lbl">เหนื่อย</span></div>
+        <div class="mood-chip" data-mood="1" onclick="logMood(this)">😢<span class="lbl">แย่</span></div>
+      </div>
+      <p class="save-mood-hint" id="moodHint">แตะเพื่อบันทึกอารมณ์วันนี้</p>
+
+      <div class="mood-history">
+        <h4 class="display">อารมณ์ 7 วันล่าสุด</h4>
+        <div class="mh-row"><div class="mh-bar-wrap" id="moodChart"><div class="mh-empty">ยังไม่มีข้อมูล ลองเช็คอินอารมณ์ดูสิ</div></div></div>
+      </div>
+
+      <div class="section-h"><h4 class="display">เครื่องมือสำหรับคุณ</h4></div>
+      <div class="tool-scroll">
+        <div class="tool-card tc3" onclick="goTo('calm')"><div>💬</div><h5 class="display">คุณหมอพอดี</h5><p>คุยกับ AI จริง ระบายและรับคำแนะนำ</p></div>
+        <div class="tool-card tc2" onclick="goTo('community')"><div>🫂</div><h5 class="display">ชุมชนออนไลน์</h5><p>พื้นที่ปลอดภัยพูดคุยกับเพื่อน</p></div>
+        <div class="tool-card tc1" onclick="goTo('journal')"><div>📓</div><h5 class="display">ไดอารี่วันนี้</h5><p>บันทึกเรื่องราวและความรู้สึก</p></div>
+      </div>
+    </section>
+
+    <!-- JOURNAL -->
+    <section class="screen" id="journal" style="position:relative;">
+      <div class="top-wrap">
+        <p class="eyebrow">พื้นที่ส่วนตัว</p>
+        <h1 class="page-title">ไดอารี่ของฉัน</h1>
+        <p class="sub">บันทึกจริง เก็บไว้บนเครื่องนี้ ไม่มีใครเห็นนอกจากคุณ</p>
+      </div>
+      <div id="journalList"></div>
+      <button class="fab" onclick="openCompose()">＋</button>
+      <div class="compose" id="compose">
+        <div class="compose-top">
+          <button onclick="closeCompose()">ยกเลิก</button>
+          <span style="font-weight:700; font-size:12.5px;">บันทึกใหม่</span>
+          <button class="save" onclick="saveJournalEntry()">บันทึก</button>
+        </div>
+        <div class="mood-select-row" id="composeMoodRow">
+          <div class="m" data-e="😄">😄</div><div class="m on" data-e="🙂">🙂</div><div class="m" data-e="😔">😔</div><div class="m" data-e="😢">😢</div><div class="m" data-e="😡">😡</div>
+        </div>
+        <textarea id="composeText" placeholder="วันนี้เป็นอย่างไรบ้าง...เขียนระบายได้เต็มที่นะ"></textarea>
+      </div>
+    </section>
+
+    <!-- COMMUNITY -->
+    <section class="screen" id="community">
+      <div class="top-wrap">
+        <p class="eyebrow">ชุมชนออนไลน์</p>
+        <h1 class="page-title">พื้นที่ปลอดภัยของเรา</h1>
+      </div>
+      <p class="privacy-note">⚠️ โพสต์ที่นี่จะเห็นได้จากทุกคนที่เปิดแอปนี้ (ข้อมูลสาธารณะ) กรุณาไม่ระบุตัวตนหรือข้อมูลส่วนตัว</p>
+      <div class="new-post-box">
+        <textarea id="postText" placeholder="แบ่งปันความรู้สึกของคุณ..."></textarea>
+        <button onclick="submitPost()">โพสต์</button>
+        <div style="clear:both;"></div>
+      </div>
+      <div id="postList"></div>
+    </section>
+
+    <!-- CALM / AI CHAT -->
+    <section class="screen" id="calm" style="display:flex; flex-direction:column;">
+      <div class="top-wrap" style="padding-bottom:10px;">
+        <p class="eyebrow">AI เพื่อนคุยใจดี · ขับเคลื่อนโดย Claude</p>
+        <h1 class="page-title">คุณหมอพอดี</h1>
+      </div>
+      <div class="crisis-note">หากคุณกำลังคิดทำร้ายตัวเองหรืออยู่ในภาวะวิกฤต โทรสายด่วนสุขภาพจิต 1323 (ฟรี 24 ชม.) ได้ทันที AI นี้ไม่ใช่การรักษาทางการแพทย์</div>
+      <div id="chatLog" style="flex:1; overflow-y:auto; padding-top:4px;"></div>
+      <div class="chat-input-bar">
+        <input type="text" id="chatInput" placeholder="พิมพ์ข้อความ..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="send-btn" id="sendBtn" onclick="sendChat()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"></path><path d="M22 2 15 22l-4-9-9-4 20-7Z"></path></svg>
+        </button>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="tabbar" id="tabbar" style="display:none;">
+    <button class="tab" data-target="home" onclick="goTo('home')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"></path><path d="M5 10v10h14V10"></path></svg>หน้าหลัก</button>
+    <button class="tab" data-target="journal" onclick="goTo('journal')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h9l3 3v13H6z"></path><path d="M9 9h6M9 13h6M9 17h4"></path></svg>ไดอารี่</button>
+    <button class="tab" data-target="community" onclick="goTo('community')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"></circle><path d="M2 20c0-3.3 3-6 7-6s7 2.7 7 6"></path><circle cx="17" cy="8" r="2.6"></circle><path d="M16 14.2c2.6.5 4.5 2.6 4.5 5.8"></path></svg>ชุมชน</button>
+    <button class="tab" data-target="calm" onclick="goTo('calm')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2 3 3 5 3 7a3 3 0 1 1-6 0c0-2 1-4 3-7Z"></path><path d="M4 20c2-1.5 4-1.5 8 0s6 1.5 8 0"></path></svg>ผ่อนคลาย</button>
+  </div>
+</div>
+
+<script>
+let profile = null;
+let journalEntries = [];
+let moodEntries = [];
+let chatHistory = [];
+
+async function safeGet(key, shared=false){
+  try{ const r = await window.storage.get(key, shared); return r ? JSON.parse(r.value) : null; }
+  catch(e){ return null; }
+}
+async function safeSet(key, value, shared=false){
+  try{ await window.storage.set(key, JSON.stringify(value), shared); }catch(e){ console.error('storage set failed', e); }
+}
+
+async function init(){
+  const saved = await safeGet('profile');
+  if(saved && saved.name){
+    profile = saved;
+    await afterLogin();
+  }
+}
+
+async function handleLogin(){
+  const name = document.getElementById('nameInput').value.trim();
+  const errEl = document.getElementById('loginErr');
+  if(!name){ errEl.textContent = 'กรุณากรอกชื่อที่ใช้แสดงก่อนนะครับ'; return; }
+  errEl.textContent = '';
+  profile = { name, createdAt: Date.now() };
+  await safeSet('profile', profile);
+  await afterLogin();
+}
+
+async function afterLogin(){
+  document.getElementById('tabbar').style.display = 'flex';
+  document.getElementById('avatarLetter').textContent = profile.name.charAt(0).toUpperCase();
+  const hr = new Date().getHours();
+  document.getElementById('greetTime').textContent = hr < 12 ? 'สวัสดีตอนเช้า' : hr < 18 ? 'สวัสดีตอนบ่าย' : 'สวัสดีตอนเย็น';
+  document.getElementById('greetName').textContent = 'สวัสดี ' + profile.name;
+
+  journalEntries = (await safeGet('journal-entries')) || [];
+  moodEntries = (await safeGet('mood-entries')) || [];
+  chatHistory = (await safeGet('chat-history')) || [];
+
+  renderJournal();
+  renderMoodChart();
+  renderChat();
+  await loadCommunity();
+  goTo('home');
+}
+
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=> t.classList.toggle('active', t.dataset.target===id));
+  if(id === 'calm'){ const log = document.getElementById('chatLog'); setTimeout(()=>{ log.scrollTop = log.scrollHeight; }, 50); }
+}
+
+/* ---------- MOOD ---------- */
+async function logMood(el){
+  document.querySelectorAll('.mood-chip').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  const val = parseInt(el.dataset.mood);
+  const today = new Date().toDateString();
+  moodEntries = moodEntries.filter(m => m.day !== today);
+  moodEntries.push({ day: today, value: val, ts: Date.now() });
+  await safeSet('mood-entries', moodEntries);
+  document.getElementById('moodHint').textContent = 'บันทึกอารมณ์วันนี้แล้ว ✓';
+  renderMoodChart();
+}
+
+function renderMoodChart(){
+  const wrap = document.getElementById('moodChart');
+  if(moodEntries.length === 0){
+    wrap.innerHTML = '<div class="mh-empty">ยังไม่มีข้อมูล ลองเช็คอินอารมณ์ดูสิ</div>';
+    return;
+  }
+  const last7 = moodEntries.slice(-7);
+  wrap.innerHTML = last7.map(m => {
+    const h = (m.value / 4) * 100;
+    return '<div class="mh-bar" style="height:'+h+'%" title="'+m.day+'"></div>';
+  }).join('');
+}
+
+/* ---------- JOURNAL ---------- */
+function openCompose(){ document.getElementById('compose').classList.add('open'); }
+function closeCompose(){
+  document.getElementById('compose').classList.remove('open');
+  document.getElementById('composeText').value = '';
+}
+document.addEventListener('click', function(e){
+  if(e.target.closest('#composeMoodRow .m')){
+    document.querySelectorAll('#composeMoodRow .m').forEach(m=>m.classList.remove('on'));
+    e.target.closest('.m').classList.add('on');
+  }
+});
+async function saveJournalEntry(){
+  const text = document.getElementById('composeText').value.trim();
+  if(!text) { closeCompose(); return; }
+  const mood = document.querySelector('#composeMoodRow .m.on').dataset.e;
+  journalEntries.unshift({ id: Date.now(), text, mood, ts: Date.now() });
+  await safeSet('journal-entries', journalEntries);
+  renderJournal();
+  closeCompose();
+}
+async function deleteJournalEntry(id){
+  journalEntries = journalEntries.filter(e => e.id !== id);
+  await safeSet('journal-entries', journalEntries);
+  renderJournal();
+}
+function renderJournal(){
+  const list = document.getElementById('journalList');
+  if(journalEntries.length === 0){
+    list.innerHTML = '<div class="empty-state">ยังไม่มีบันทึก<br>แตะปุ่ม + เพื่อเริ่มเขียนบันทึกแรกของคุณ</div>';
+    return;
+  }
+  list.innerHTML = journalEntries.map(e => {
+    const d = new Date(e.ts);
+    const dateStr = d.toLocaleDateString('th-TH', {day:'numeric', month:'short'}) + ' · ' + d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+    return '<div class="journal-entry">'
+      + '<button class="je-del" onclick="deleteJournalEntry('+e.id+')">✕</button>'
+      + '<div class="je-top"><span>'+dateStr+'</span><span class="je-mood">'+e.mood+'</span></div>'
+      + '<p>'+escapeHtml(e.text)+'</p></div>';
+  }).join('');
+}
+
+/* ---------- COMMUNITY (shared) ---------- */
+async function loadCommunity(){
+  const list = document.getElementById('postList');
+  list.innerHTML = '<div class="empty-state">กำลังโหลด...</div>';
+  try{
+    const idx = await window.storage.get('post-index', true);
+    const ids = idx ? JSON.parse(idx.value) : [];
+    const posts = [];
+    for(const id of ids.slice(-30).reverse()){
+      try{
+        const p = await window.storage.get('post:'+id, true);
+        if(p) posts.push(JSON.parse(p.value));
+      }catch(e){}
+    }
+    renderPosts(posts);
+  }catch(e){
+    list.innerHTML = '<div class="empty-state">โหลดชุมชนไม่สำเร็จ ลองใหม่อีกครั้ง</div>';
+  }
+}
+function renderPosts(posts){
+  const list = document.getElementById('postList');
+  if(posts.length === 0){ list.innerHTML = '<div class="empty-state">ยังไม่มีโพสต์ เป็นคนแรกที่แบ่งปันสิ!</div>'; return; }
+  list.innerHTML = posts.map(p => {
+    const d = new Date(p.ts);
+    const timeStr = d.toLocaleDateString('th-TH',{day:'numeric',month:'short'}) + ' ' + d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+    return '<div class="post">'
+      + '<div class="post-top"><div class="post-avatar"></div><div><div class="post-name">'+escapeHtml(p.name)+'</div><div class="post-time">'+timeStr+'</div></div></div>'
+      + '<p>'+escapeHtml(p.text)+'</p>'
+      + '<div class="post-actions"><span onclick="likePost(\''+p.id+'\')">💙 '+(p.likes||0)+' กำลังใจ</span></div></div>';
+  }).join('');
+}
+async function submitPost(){
+  const ta = document.getElementById('postText');
+  const text = ta.value.trim();
+  if(!text) return;
+  const id = 'p' + Date.now() + Math.floor(Math.random()*1000);
+  const post = { id, name: profile.name, text, ts: Date.now(), likes: 0 };
+  await window.storage.set('post:'+id, JSON.stringify(post), true);
+  const idxRes = await window.storage.get('post-index', true).catch(()=>null);
+  const ids = idxRes ? JSON.parse(idxRes.value) : [];
+  ids.push(id);
+  await window.storage.set('post-index', JSON.stringify(ids), true);
+  ta.value = '';
+  loadCommunity();
+}
+async function likePost(id){
+  try{
+    const p = await window.storage.get('post:'+id, true);
+    const post = JSON.parse(p.value);
+    post.likes = (post.likes || 0) + 1;
+    await window.storage.set('post:'+id, JSON.stringify(post), true);
+    loadCommunity();
+  }catch(e){}
+}
+
+/* ---------- AI CHAT ---------- */
+function renderChat(){
+  const log = document.getElementById('chatLog');
+  if(chatHistory.length === 0){
+    chatHistory = [{ role:'assistant', text:'สวัสดีค่ะ ยินดีที่ได้รู้จักนะคะ 🌿 วันนี้อยากเล่าอะไรให้ฟังบ้างไหมคะ' }];
+  }
+  log.innerHTML = chatHistory.map(m =>
+    '<div class="chat-row" style="'+(m.role==='user'?'justify-content:flex-end;':'')+'">'
+    + '<div class="chat-bubble '+(m.role==='user'?'me':'bot')+'">'+escapeHtml(m.text)+'</div></div>'
+  ).join('');
+  log.scrollTop = log.scrollHeight;
+}
+async function sendChat(){
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+  const sendBtn = document.getElementById('sendBtn');
+  input.value = '';
+  sendBtn.disabled = true;
+  chatHistory.push({ role:'user', text });
+  renderChat();
+  await safeSet('chat-history', chatHistory);
+
+  const log = document.getElementById('chatLog');
+  const typingRow = document.createElement('div');
+  typingRow.className = 'chat-row';
+  typingRow.innerHTML = '<div class="chat-bubble bot"><div class="typing"><span></span><span></span><span></span></div></div>';
+  log.appendChild(typingRow);
+  log.scrollTop = log.scrollHeight;
+
+  try{
+    const apiMessages = chatHistory.map(m => ({ role: m.role, content: m.text }));
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        system: "คุณคือ 'คุณหมอพอดี' ผู้ช่วย AI ที่ให้กำลังใจและรับฟังในแอป De Stress ซึ่งเป็นแอปดูแลสุขภาพจิตเบื้องต้นสำหรับคนไทย หน้าที่ของคุณคือรับฟังด้วยความเห็นอกเห็นใจ ให้กำลังใจ และแนะนำเทคนิคจัดการความเครียดเบื้องต้นที่ปลอดภัย (เช่น การหายใจ การพักผ่อน การเขียนระบาย) ตอบเป็นภาษาไทย น้ำเสียงอบอุ่น สุภาพ กระชับ (ไม่เกิน 4-5 ประโยค) ห้ามวินิจฉัยโรคทางจิตเวชเด็ดขาด และห้ามให้คำแนะนำเรื่องยาหรือขนาดยา หากผู้ใช้มีสัญญาณเสี่ยงทำร้ายตัวเองหรืออยู่ในภาวะวิกฤต ให้แนะนำสายด่วนสุขภาพจิต 1323 ทันทีอย่างชัดเจน และแนะนำให้พบจิตแพทย์หรือนักจิตวิทยาเมื่อเหมาะสม",
+        messages: apiMessages
+      })
+    });
+    const data = await response.json();
+    typingRow.remove();
+    let reply = "ขอโทษค่ะ ตอนนี้ระบบขัดข้องชั่วคราว ลองพิมพ์อีกครั้งนะคะ";
+    if(data && data.content){
+      const textBlock = data.content.find(c => c.type === 'text');
+      if(textBlock) reply = textBlock.text;
+    }
+    chatHistory.push({ role:'assistant', text: reply });
+    renderChat();
+    await safeSet('chat-history', chatHistory);
+  }catch(e){
+    typingRow.remove();
+    chatHistory.push({ role:'assistant', text:'ขอโทษค่ะ เชื่อมต่อไม่สำเร็จ ลองอีกครั้งนะคะ 🙏' });
+    renderChat();
+  }
+  sendBtn.disabled = false;
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+init();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(e => console.log('SW registration failed', e));
+  });
+}
+</script>
+
+</body>
+</html>

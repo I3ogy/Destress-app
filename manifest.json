@@ -1,0 +1,32 @@
+{
+  "name": "De Stress",
+  "short_name": "De Stress",
+  "description": "สุขภาพจิตดี เริ่มต้นที่ตัวคุณ - แอปดูแลสุขภาพจิตเบื้องต้น",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#152238",
+  "theme_color": "#152238",
+  "lang": "th",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
